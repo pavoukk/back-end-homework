@@ -1,10 +1,15 @@
 package it.sevenbits.formatter;
 
+import it.sevenbits.formatter.formatters.stringformatter.Formatter;
+import it.sevenbits.formatter.readers.IReader;
+import it.sevenbits.formatter.readers.StringReader;
+import it.sevenbits.formatter.writers.IWriter;
+import it.sevenbits.formatter.writers.StringWriter;
 import org.junit.*;
 
 import java.io.IOException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class FormatterTest {
     private IReader reader1;

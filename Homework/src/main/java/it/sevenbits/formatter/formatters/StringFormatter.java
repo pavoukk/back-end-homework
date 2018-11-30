@@ -1,11 +1,15 @@
-package it.sevenbits.formatter;
+package it.sevenbits.formatter.formatters.stringformatter;
+
+import it.sevenbits.formatter.formatters.IFormatter;
+import it.sevenbits.formatter.readers.IReader;
+import it.sevenbits.formatter.writers.IWriter;
 
 import java.io.IOException;
 
 /**
- * Formatter is a class that works with streams
+ * FileFormatter is a class that works with streams
  */
-public class Formatter {
+public class StringFormatter implements IFormatter {
     private final int spaceAmount = 4;
     private final char space = ' ';
     private final char newLine = '\n';
@@ -13,7 +17,7 @@ public class Formatter {
     private final char closingBracket = '}';
     private final char semicolon = ';';
     /**
-     *  Formatter function format that reads symbols step by step from a stream
+     *  FileFormatter function format that reads symbols step by step from a stream
      *  and writes formatted symbols step by step to other stream.
      * @param reader is a stream from where reads every symbol.
      * @param writer is a stream where symbols is written.
@@ -21,7 +25,8 @@ public class Formatter {
      * @return String
      *
      */
-    public IWriter format(final IReader reader, final IWriter writer) throws IOException {
+
+    public void format(final IWriter writer, final IReader reader) throws IOException {
         int countClBr = 0;
         int countOpBr = 0;
         char buffer = reader.read();
@@ -86,6 +91,5 @@ public class Formatter {
                 }
             }
         }
-        return writer;
     }
 }
