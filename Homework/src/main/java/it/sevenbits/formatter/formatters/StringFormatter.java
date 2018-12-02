@@ -1,4 +1,4 @@
-package it.sevenbits.formatter.formatters.stringformatter;
+package it.sevenbits.formatter.formatters;
 
 import it.sevenbits.formatter.formatters.IFormatter;
 import it.sevenbits.formatter.readers.IReader;
@@ -22,11 +22,10 @@ public class StringFormatter implements IFormatter {
      * @param reader is a stream from where reads every symbol.
      * @param writer is a stream where symbols is written.
      * @throws IOException that is input and output streams exception.
-     * @return String
      *
      */
 
-    public void format(final IWriter writer, final IReader reader) throws IOException {
+    public void format(final IReader reader, final IWriter writer) throws IOException {
         int countClBr = 0;
         int countOpBr = 0;
         char buffer = reader.read();

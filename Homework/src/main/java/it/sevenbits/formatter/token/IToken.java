@@ -1,4 +1,4 @@
-package it.sevenbits.formatter;
+package it.sevenbits.formatter.token;
 
 /**
  *IToken is an interface that is used to store some lexeme and it's name

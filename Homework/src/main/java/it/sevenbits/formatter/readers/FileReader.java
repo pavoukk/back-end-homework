@@ -1,70 +1,75 @@
 package it.sevenbits.formatter.readers;
 
-import it.sevenbits.formatter.exceptions.FileReaderException;
+import it.sevenbits.formatter.exceptions.ReaderException;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.Closeable;
+import java.io.File;
+import java.io.Reader;
+import java.io.IOException;
 
+/**
+ * FileReader reads info from a file
+ */
 public class FileReader implements IReader, Closeable, AutoCloseable {
     private Reader reader;
     private File file;
-    private int count;
 
-    public FileReader(final String path) throws FileReaderException {
+    /**
+     *
+     * @param path is a file path or a file name
+     * @throws ReaderException is thrown if something goes wrong
+     */
+    public FileReader(final String path) throws ReaderException {
         try {
             this.file = new File(path);
-            count = 0;
-            if (!file.exists()) {
-                file.createNewFile();
-            }
             reader = new BufferedReader(new java.io.FileReader(path));
         } catch (IOException e) {
-            throw new FileReaderException(e);
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                }
-            }
+            throw new ReaderException(e);
         }
     }
 
-    public FileReader(final File file) throws IOException {
+    /**
+     *
+     * @param file is a file
+     * @throws ReaderException is thrown if sonething goes wrong
+     */
+    public FileReader(final File file) throws ReaderException {
         try {
             this.file = file;
-            count = 0;
             if (!file.exists()) {
                 this.file.createNewFile();
             }
             reader = new BufferedReader(new java.io.FileReader(file));
         } catch (IOException e) {
-            throw new FileReaderException(e);
-        } finally {
-            if (reader !=null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                }
-            }
+            throw new ReaderException(e);
         }
     }
 
     @Override
-    public boolean hasNext() throws FileReaderException {
+    public boolean hasNext() throws ReaderException {
         try {
             return reader.ready();
         } catch (IOException e) {
-            throw new FileReaderException(e);
+            throw new ReaderException(e);
         }
     }
 
     @Override
-    public char read() throws IOException {
-        return (char) reader.read();
+    public char read() throws ReaderException {
+        try {
+            return (char) reader.read();
+        } catch (IOException e) {
+            throw new ReaderException(e);
+        }
     }
 
     @Override
-    public void close() throws IOException {
-        reader.close();
+    public void close() throws ReaderException {
+        try {
+            reader.close();
+        } catch (IOException e) {
+            throw new ReaderException(e);
+        }
     }
 }

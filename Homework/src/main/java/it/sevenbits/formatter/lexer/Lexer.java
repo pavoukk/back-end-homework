@@ -1,94 +1,69 @@
 package it.sevenbits.formatter.lexer;
 
-import it.sevenbits.formatter.IToken;
-import it.sevenbits.formatter.Token;
+import it.sevenbits.formatter.exceptions.ReaderException;
+import it.sevenbits.formatter.token.IToken;
+import it.sevenbits.formatter.token.Token;
 import it.sevenbits.formatter.readers.IReader;
-import it.sevenbits.formatter.readers.StringReader;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+/**
+ * Lexer is an ILexer's implementation.
+ * It gets IReader object while creating and translates object's info into tokens.
+ */
 public class Lexer implements ILexer {
-    private final int spaceAmount = 4;
-    private final char space = ' ';
-    private final char newLine = '\n';
-    private final char openingBracket = '{';
-    private final char closingBracket = '}';
-    private final char semicolon = ';';
-    private final String name = "string";
+    private final char SPACE = ' ';
+    private final char NEW_LINE = '\n';
+    private final String STRING_NAME = "string";
+
     private IReader reader;
-    private char buffer;
-    private List<Character> lexemes;
     private Map<Character, String> names;
-    private char buf;
+    private char markBuf;
 
-    public Lexer(IReader reader, List<Character> lexemes, Map<Character, String> names) {
+    public Lexer(final IReader reader) {
         this.reader = reader;
-        this.lexemes = lexemes;
-        this.names = names;
-        buf = ' ';
-    }
-
-    @Override
-    public IToken readToken() throws IOException {
-        StringBuilder lexeme = new StringBuilder();
-        boolean append = false;
-        if (buf!= ' ') {
-            lexeme.append(buf);
-            String str = names.get(buf);
-            buf = ' ';
-            return new Token(str, lexeme.toString());
-        }
-        while (reader.hasNext()) {
-            buffer = reader.read();
-            if (lexemes.contains(buffer) && lexeme.length() == 0) {
-                lexeme.append(buffer);
-                return new Token(names.get(buffer), lexeme.toString());
-            }
-            if ((buffer == space || lexemes.contains(buffer)) && lexeme.length() > 0) {
-                buf = buffer;
-                return new Token(name, lexeme.toString());
-            }
-
-            if (buffer != space) {
-                lexeme.append(buffer);
-            }
-//            if (lexemes.contains(buffer) && lexeme.length() == 1) {
-//                return new Token(name, lexeme.toString());
-//            }
-        }
-        if (lexemes.contains(buffer)) {
-            return new Token(names.get(buffer), lexeme.toString());
-        }
-        return new Token(name, lexeme.toString());
-    }
-
-    public static void main(String[] args) throws IOException {
-        List<IToken> tokens = new ArrayList<>();
-        IReader reader = new StringReader("a  public  void func (){int a = 0; int b = 3; int c= 4; if(a== b){ b = a; return b;}");
-        List<Character> lexemes = new ArrayList<>();
-//            lexemes.add(' ');
-        lexemes.add('\n');
-        lexemes.add('{');
-        lexemes.add('}');
-        lexemes.add(';');
-        lexemes.add('(');
-        lexemes.add(')');
-        Map<Character, String> names = new HashMap<>();
-//            names.put(' ', "space");
-        names.put('\n', "new line");
+        names = new HashMap<>();
+//        names.put('\n', "new line");
         names.put('{', "opening bracket");
         names.put('}', "closing bracket");
         names.put(';', "semicolon");
         names.put('(', "opening parenthesis");
         names.put(')', "closing parenthesis");
-        Lexer lexer = new Lexer(reader, lexemes, names);
-        while (reader.hasNext()) {
-            tokens.add(lexer.readToken());
+        markBuf = ' ';
+    }
+
+    @Override
+    public IToken readToken() throws ReaderException {
+        char buffer = SPACE;
+        StringBuilder lexeme = new StringBuilder();
+        boolean append = false;
+        if (markBuf != SPACE && markBuf != NEW_LINE) {
+            lexeme.append(markBuf);
+            String str = names.get(markBuf);
+            markBuf = SPACE;
+            return new Token(str, lexeme.toString());
         }
-        System.out.println(tokens.toString());
+        while (reader.hasNext()) {
+            buffer = reader.read();
+            String name = names.get(buffer);
+            if (name != null && lexeme.length() == 0) {
+                lexeme.append(buffer);
+                return new Token(name, lexeme.toString());
+            }
+            if ((buffer == SPACE || buffer == NEW_LINE || name != null) && lexeme.length() > 0) {
+                markBuf = buffer;
+                return new Token(STRING_NAME, lexeme.toString());
+            }
+
+            if (!(buffer == SPACE || buffer == NEW_LINE)) {
+                lexeme.append(buffer);
+            }
+        }
+        String name = names.get(buffer);
+        if (name != null) {
+            return new Token(name, lexeme.toString());
+        }
+        return new Token(STRING_NAME, lexeme.toString());
     }
 }

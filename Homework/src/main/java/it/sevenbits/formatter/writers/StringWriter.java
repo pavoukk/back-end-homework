@@ -23,8 +23,8 @@ public class StringWriter implements IWriter {
         string.append(ch);
     }
 
-    public StringBuilder getString() {
-        return string;
+    public String getString() {
+        return string.toString();
     }
     @Override
     public boolean equals(final Object o) {
