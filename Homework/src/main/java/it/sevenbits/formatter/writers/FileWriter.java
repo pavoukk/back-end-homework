@@ -2,11 +2,8 @@ package it.sevenbits.formatter.writers;
 
 import it.sevenbits.formatter.exceptions.WriterException;
 
-import java.io.Closeable;
-import java.io.File;
-import java.io.IOException;
-import java.io.Writer;
-import java.io.BufferedWriter;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 /**
  * File writer gets file path or a file while creating and then writes input info into it
@@ -26,7 +23,8 @@ public class FileWriter implements IWriter, Closeable, AutoCloseable {
             if (!file.exists()) {
                 file.createNewFile();
             }
-            writer = new BufferedWriter(new java.io.FileWriter(path));
+//            writer = new BufferedWriter(new java.io.FileWriter(path));
+            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), StandardCharsets.UTF_8));
         } catch (IOException e) {
             throw new WriterException(e);
         }
@@ -43,7 +41,8 @@ public class FileWriter implements IWriter, Closeable, AutoCloseable {
             if (!file.exists()) {
                 this.file.createNewFile();
             }
-            writer = new BufferedWriter(new java.io.FileWriter(this.file));
+//            writer = new BufferedWriter(new java.io.FileWriter(this.file));
+            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8));
         } catch (IOException e) {
             throw new WriterException(e);
         }

@@ -2,11 +2,8 @@ package it.sevenbits.formatter.readers;
 
 import it.sevenbits.formatter.exceptions.ReaderException;
 
-import java.io.BufferedReader;
-import java.io.Closeable;
-import java.io.File;
-import java.io.Reader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 /**
  * FileReader reads info from a file
@@ -23,7 +20,8 @@ public class FileReader implements IReader, Closeable, AutoCloseable {
     public FileReader(final String path) throws ReaderException {
         try {
             this.file = new File(path);
-            reader = new BufferedReader(new java.io.FileReader(path));
+//            reader = new BufferedReader(new java.io.FileReader(path));
+            reader = new BufferedReader(new InputStreamReader(new FileInputStream(path), StandardCharsets.UTF_8));
         } catch (IOException e) {
             throw new ReaderException(e);
         }
@@ -40,7 +38,8 @@ public class FileReader implements IReader, Closeable, AutoCloseable {
             if (!file.exists()) {
                 this.file.createNewFile();
             }
-            reader = new BufferedReader(new java.io.FileReader(file));
+//            reader = new BufferedReader(new java.io.FileReader(file));
+            reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
         } catch (IOException e) {
             throw new ReaderException(e);
         }

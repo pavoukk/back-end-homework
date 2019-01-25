@@ -15,7 +15,8 @@ import java.util.Map;
 public class Lexer implements ILexer {
     private final char SPACE = ' ';
     private final char NEW_LINE = '\n';
-    private final String STRING_NAME = "string";
+//    private final String STRING_NAME = "string";
+    private final String CHARACTER = "character";
 
     private IReader reader;
     private Map<Character, String> names;
@@ -33,6 +34,13 @@ public class Lexer implements ILexer {
         markBuf = ' ';
     }
 
+    @Override
+    public IToken readToken() throws ReaderException {
+        StringBuilder lexeme = new StringBuilder();
+
+    }
+
+    /*
     @Override
     public IToken readToken() throws ReaderException {
         char buffer = SPACE;
@@ -65,5 +73,12 @@ public class Lexer implements ILexer {
             return new Token(name, lexeme.toString());
         }
         return new Token(STRING_NAME, lexeme.toString());
+    }*/
+
+
+
+    @Override
+    public boolean hasMoreTokens() throws ReaderException {
+        return reader.hasNext();
     }
 }

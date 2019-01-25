@@ -13,4 +13,6 @@ public interface ILexer {
      * @throws ReaderException if something goes wrong
      */
     IToken readToken() throws ReaderException;
+
+    boolean hasMoreTokens() throws ReaderException;
 }

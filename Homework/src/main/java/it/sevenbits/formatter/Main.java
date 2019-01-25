@@ -1,4 +1,4 @@
-package it.sevenbits.formatter.main;
+package it.sevenbits.formatter;
 
 import it.sevenbits.formatter.exceptions.ReaderException;
 import it.sevenbits.formatter.exceptions.WriterException;
