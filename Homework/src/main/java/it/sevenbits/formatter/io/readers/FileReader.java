@@ -17,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 public class FileReader implements IReader, Closeable, AutoCloseable {
     private Reader reader;
     private File file;
+    private int readSymbol;
 
     /**
      * A constructor with one parameter
@@ -41,24 +42,23 @@ public class FileReader implements IReader, Closeable, AutoCloseable {
                 this.file.createNewFile();
             }
             reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
+            readSymbol = reader.read();
         } catch (IOException e) {
             throw new ReaderException(e);
         }
     }
 
     @Override
-    public boolean hasNext() throws ReaderException {
-        try {
-            return reader.ready();
-        } catch (IOException e) {
-            throw new ReaderException(e);
-        }
+    public boolean hasNext() {
+        return readSymbol != -1;
     }
 
     @Override
     public char read() throws ReaderException {
         try {
-            return (char) reader.read();
+            char symbol = (char) readSymbol;
+            readSymbol = reader.read();
+            return symbol;
         } catch (IOException e) {
             throw new ReaderException(e);
         }
