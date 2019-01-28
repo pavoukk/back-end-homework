@@ -1,12 +1,13 @@
-package it.sevenbits.formatter.formatters;
+package it.sevenbits.formatter.io.formatters;
 
-import it.sevenbits.formatter.exceptions.ReaderException;
-import it.sevenbits.formatter.exceptions.WriterException;
+import it.sevenbits.formatter.IFormatter;
+import it.sevenbits.formatter.io.exceptions.ReaderException;
+import it.sevenbits.formatter.io.exceptions.WriterException;
 import it.sevenbits.formatter.token.IToken;
 import it.sevenbits.formatter.factories.ILexerFactory;
 import it.sevenbits.formatter.lexer.ILexer;
-import it.sevenbits.formatter.readers.IReader;
-import it.sevenbits.formatter.writers.IWriter;
+import it.sevenbits.formatter.IReader;
+import it.sevenbits.formatter.IWriter;
 
 import java.util.ArrayList;
 import java.util.List;

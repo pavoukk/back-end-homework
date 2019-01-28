@@ -1,8 +1,8 @@
-package it.sevenbits.formatter.formatters;
+package it.sevenbits.formatter.string.formatters;
 
-import it.sevenbits.formatter.formatters.IFormatter;
-import it.sevenbits.formatter.readers.IReader;
-import it.sevenbits.formatter.writers.IWriter;
+import it.sevenbits.formatter.IFormatter;
+import it.sevenbits.formatter.IReader;
+import it.sevenbits.formatter.IWriter;
 
 import java.io.IOException;
 

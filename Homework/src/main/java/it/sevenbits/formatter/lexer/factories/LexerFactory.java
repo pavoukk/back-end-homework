@@ -2,7 +2,7 @@ package it.sevenbits.formatter.factories;
 
 import it.sevenbits.formatter.lexer.ILexer;
 import it.sevenbits.formatter.lexer.Lexer;
-import it.sevenbits.formatter.readers.IReader;
+import it.sevenbits.formatter.io.readers.IReader;
 
 /**
  * LexerFactory is an ILexerFactory's implementation.

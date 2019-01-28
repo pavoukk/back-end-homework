@@ -5,10 +5,14 @@ import java.util.Map;
 
 public class CommandManager {
     private Map<Pair<State, String>, ICommand> commandMap;
-    private ICommand ignore = new IgnoringCommand();
+    private CommandContext commandContext;
+    private ICommand ignore;
 
-    public CommandManager() {
-        ICommand append = new AppendingCommand();
+    public CommandManager(final CommandContext commandContext) {
+        this.commandContext = commandContext;
+        ignore = new IgnoringCommand(commandContext);
+        ICommand append = new AppendingCommand(commandContext);
+        ICommand getResult = new ResultCommand(commandContext);
         State defaultState = new State("DEFAULT");
         State oneLineCommentCollectionState = new State("ONE_LINE_COMMENT_COLLECTION");
         State manyLinesCommentCollectionState = new State("MANY_LINES_COMMENT_COLLECTION");
@@ -16,14 +20,14 @@ public class CommandManager {
         commandMap = new HashMap<>();
         commandMap.put(new Pair<>(defaultState, "NEW_LINE"), ignore);
         commandMap.put(new Pair<>(defaultState, "SPACE"), ignore);
-        commandMap.put(new Pair<>(defaultState, "OPENING_BRACKET"), append);
-        commandMap.put(new Pair<>(defaultState, "CLOSING_BRACKET"), append); //TODO add command for {}();
-        commandMap.put(new Pair<>(defaultState, "OPENING_PARENTHESIS"), append); //TODO append does not suit
-        commandMap.put(new Pair<>(defaultState, "CLOSING_PARENTHESIS"), append);
-        commandMap.put(new Pair<>(defaultState, "SEMICOLON"), append);
-        commandMap.put(new Pair<>(defaultState, "STRING"), append);
-        commandMap.put(new Pair<>(defaultState, "ONE_LINE_COMMENT"), append);
-        commandMap.put(new Pair<>(defaultState, "MANY_LINES_COMMENT_OPENING"), append);
+        commandMap.put(new Pair<>(defaultState, "OPENING_BRACKET"), ignore); //here was append
+        commandMap.put(new Pair<>(defaultState, "CLOSING_BRACKET"), ignore); //TODO add command for {}();
+        commandMap.put(new Pair<>(defaultState, "OPENING_PARENTHESIS"), ignore); //TODO append does not suit
+        commandMap.put(new Pair<>(defaultState, "CLOSING_PARENTHESIS"), ignore); // here was append
+        commandMap.put(new Pair<>(defaultState, "SEMICOLON"), ignore); // here was append
+        commandMap.put(new Pair<>(defaultState, "STRING"), append); //here was append // no
+        commandMap.put(new Pair<>(defaultState, "ONE_LINE_COMMENT"), append); //here was append // no
+        commandMap.put(new Pair<>(defaultState, "MANY_LINES_COMMENT_OPENING"), append); // here was append // no
 
         commandMap.put(new Pair<>(wordCollectionState, "STRING"), append);
         commandMap.put(new Pair<>(wordCollectionState, "NEW_LINE"), ignore);
@@ -57,6 +61,6 @@ public class CommandManager {
     }
 
     public ICommand getCommand(final State state, final String type) {
-        commandMap.getOrDefault(new Pair<>(state, type), ignore);
+        return commandMap.getOrDefault(new Pair<>(state, type), ignore);
     }
 }

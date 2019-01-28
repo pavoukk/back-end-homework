@@ -1,4 +1,6 @@
-package it.sevenbits.formatter.writers;
+package it.sevenbits.formatter.string.writers;
+
+import it.sevenbits.formatter.IWriter;
 
 import java.util.Objects;
 

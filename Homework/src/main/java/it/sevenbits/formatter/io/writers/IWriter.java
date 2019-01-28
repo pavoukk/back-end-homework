@@ -1,6 +1,6 @@
-package it.sevenbits.formatter.writers;
+package it.sevenbits.formatter;
 
-import it.sevenbits.formatter.exceptions.WriterException;
+import it.sevenbits.formatter.io.exceptions.WriterException;
 
 /**
  * IWriter is an interface that describes stream writing symbol by symbol.
