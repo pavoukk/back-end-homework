@@ -21,7 +21,8 @@ public class LexerTest {
             Lexer lexer = new Lexer(reader);
             IToken token;
             String[] lexemes = {"{", "{", "}", "}"};
-            String[] names = {"CURLY_BRACKET_OPEN", "CURLY_BRACKET_OPEN", "CURLY_BRACKET_CLOSED", "CURLY_BRACKET_CLOSED"};
+            String[] names = {"CURLY_BRACKET_OPEN", "CURLY_BRACKET_OPEN",
+                    "CURLY_BRACKET_CLOSED", "CURLY_BRACKET_CLOSED"};
 
             int i = 0;
             while (lexer.hasMoreTokens()){
@@ -40,8 +41,8 @@ public class LexerTest {
         try {
             StringReader reader = new StringReader("    \n  aaa      {  bbbb;  ccc  \n   ;   }  \n  \n  ");
             String[] lexemes = {"aaa", "{", "bbbb", ";", "ccc", ";", "}"};
-            String[] names = {"ID", "CURLY_BRACKET_OPEN", "ID", "SEMICOLON", "ID", "SEMICOLON",
-                    "CURLY_BRACKET_CLOSED"};
+            String[] names = {"ID", "CURLY_BRACKET_OPEN", "ID", "SEMICOLON",
+                    "ID", "SEMICOLON", "CURLY_BRACKET_CLOSED"};
             Lexer lexer = new Lexer(reader);
             IToken token;
             for (int i = 0; i < lexemes.length; i++) {

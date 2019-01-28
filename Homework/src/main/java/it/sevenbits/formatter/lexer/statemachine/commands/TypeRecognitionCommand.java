@@ -67,6 +67,6 @@ public class TypeRecognitionCommand implements ICommand {
         tokenTypesMap.put(" ", "SPACE");
         tokenTypesMap.put("//", "ONE_LINE_COMMENT");
         tokenTypesMap.put("/*", "MANY_LINES_COMMENT");
-        tokenTypesMap.put("\"", "STRING");
+        tokenTypesMap.put("\"", "STRING_LITERAL");
     }
 }

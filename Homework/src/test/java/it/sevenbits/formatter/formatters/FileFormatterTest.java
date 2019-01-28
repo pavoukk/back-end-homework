@@ -12,7 +12,7 @@ import java.io.*;
 
 import static org.junit.Assert.assertEquals;
 
-public class FileFormatterTest {
+/*public class FileFormatterTest {
     private File fileToRead;
     private File fileToWrite;
     private LexerFactory lexerFactory;
@@ -254,4 +254,4 @@ public class FileFormatterTest {
             e.printStackTrace();
         }
     }
-}
+}*/

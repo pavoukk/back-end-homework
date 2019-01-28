@@ -1,4 +1,4 @@
-package it.sevenbits.formatter;
+package it.sevenbits.formatter.formatters;
 
 import it.sevenbits.formatter.formatters.StringFormatter;
 import it.sevenbits.formatter.io.readers.IReader;

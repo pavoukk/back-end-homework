@@ -121,8 +121,9 @@ public class LexerStateMap {
 
     /**
      * Gets next state
+     *
      * @param state is the current state
-     * @param type is the current character's type
+     * @param type  is the current character's type
      * @return the next state
      */
     public State getNextState(final State state, final String type) {
@@ -131,6 +132,7 @@ public class LexerStateMap {
 
     /**
      * Gets default state
+     *
      * @return the next state
      */
     public State getDefaultState() {
