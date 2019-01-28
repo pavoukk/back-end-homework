@@ -9,6 +9,7 @@ import it.sevenbits.formatter.io.writers.exceptions.WriterException;
 public interface IWriter {
     /**
      * The method writes a symbol in the stream
+     *
      * @param ch is the writing symbol
      * @throws WriterException is an input/output exception.
      */

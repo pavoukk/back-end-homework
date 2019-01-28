@@ -27,6 +27,7 @@ public class FileFormatter implements IFormatter {
 
     /**
      * The constructor takes ILexerFactory object.
+     *
      * @param factory is used to create Lexer object
      */
     public FileFormatter(final ILexerFactory factory) {
@@ -41,6 +42,7 @@ public class FileFormatter implements IFormatter {
 
     /**
      * The Method formats reader's info and writes it to writer
+     *
      * @param reader is input info
      * @param writer is output info
      * @throws ReaderException is thrown if something goes wrong

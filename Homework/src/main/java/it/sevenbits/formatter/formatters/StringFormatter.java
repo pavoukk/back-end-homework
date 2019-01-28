@@ -15,13 +15,14 @@ public class StringFormatter implements IFormatter {
     private final char openingBracket = '{';
     private final char closingBracket = '}';
     private final char semicolon = ';';
+
     /**
-     *  FileFormatter function format that reads symbols step by step from a stream
-     *  and writes formatted symbols step by step to other stream.
+     * FileFormatter function format that reads symbols step by step from a stream
+     * and writes formatted symbols step by step to other stream.
+     *
      * @param reader is a stream from where reads every symbol.
      * @param writer is a stream where symbols is written.
      * @throws IOException that is input and output streams exception.
-     *
      */
 
     public void format(final IReader reader, final IWriter writer) throws IOException {
@@ -40,7 +41,7 @@ public class StringFormatter implements IFormatter {
                     buffer = reader.read();
                 }
                 if (secondBuffer != openingBracket && secondBuffer != semicolon && secondBuffer != closingBracket &&
-                    buffer != openingBracket && buffer != closingBracket && buffer != semicolon) {
+                        buffer != openingBracket && buffer != closingBracket && buffer != semicolon) {
                     spaceState = true;
                 }
             }

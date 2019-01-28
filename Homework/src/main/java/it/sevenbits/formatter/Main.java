@@ -10,17 +10,17 @@ import it.sevenbits.formatter.io.readers.FileReader;
 import it.sevenbits.formatter.io.writers.FileWriter;
 
 public final class Main {
-    private Main(){
+    private Main() {
     }
 
     public static void main(final String[] args) {
-            try (FileReader reader = new FileReader(args[0]); FileWriter writer = new FileWriter(args[1])) {
-                Lexer lexer = new Lexer(reader);
-                ILexerFactory factory = new LexerFactory();
-                FileFormatter formatter = new FileFormatter(factory);
-                formatter.format(reader, writer);
-            } catch (ReaderException | WriterException e) {
-                e.printStackTrace();
-            }
+        try (FileReader reader = new FileReader(args[0]); FileWriter writer = new FileWriter(args[1])) {
+            Lexer lexer = new Lexer(reader);
+            ILexerFactory factory = new LexerFactory();
+            FileFormatter formatter = new FileFormatter(factory);
+            formatter.format(reader, writer);
+        } catch (ReaderException | WriterException e) {
+            e.printStackTrace();
+        }
     }
 }

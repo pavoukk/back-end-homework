@@ -2,7 +2,13 @@ package it.sevenbits.formatter.io.readers;
 
 import it.sevenbits.formatter.io.readers.exceptions.ReaderException;
 
-import java.io.*;
+import java.io.Reader;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.FileInputStream;
+import java.io.File;
+import java.io.Closeable;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -13,21 +19,17 @@ public class FileReader implements IReader, Closeable, AutoCloseable {
     private File file;
 
     /**
+     * A constructor with one parameter
      *
      * @param path is a file path or a file name
      * @throws ReaderException is thrown if something goes wrong
      */
     public FileReader(final String path) throws ReaderException {
-        try {
-            this.file = new File(path);
-//            reader = new BufferedReader(new java.io.FileReader(path));
-            reader = new BufferedReader(new InputStreamReader(new FileInputStream(path), StandardCharsets.UTF_8));
-        } catch (IOException e) {
-            throw new ReaderException(e);
-        }
+        this(new File(path));
     }
 
     /**
+     * A constructor with one parameter
      *
      * @param file is a file
      * @throws ReaderException is thrown if sonething goes wrong
@@ -38,7 +40,6 @@ public class FileReader implements IReader, Closeable, AutoCloseable {
             if (!file.exists()) {
                 this.file.createNewFile();
             }
-//            reader = new BufferedReader(new java.io.FileReader(file));
             reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
         } catch (IOException e) {
             throw new ReaderException(e);

@@ -17,19 +17,28 @@ public class StringWriter implements IWriter {
 
     /**
      * The implemented method.
+     *
      * @param ch is the writing symbol
      */
     public void write(final char ch) {
         string.append(ch);
     }
 
+    /**
+     * @return current string
+     */
     public String getString() {
         return string.toString();
     }
+
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         StringWriter that = (StringWriter) o;
         return Objects.equals(string, that.string);
     }

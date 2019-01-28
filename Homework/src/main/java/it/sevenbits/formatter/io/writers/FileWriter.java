@@ -2,8 +2,14 @@ package it.sevenbits.formatter.io.writers;
 
 import it.sevenbits.formatter.io.writers.exceptions.WriterException;
 
-import java.io.*;
+import java.io.Writer;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.io.FileOutputStream;
+import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.io.Closeable;
+import java.io.IOException;
 
 /**
  * File writer gets file path or a file while creating and then writes input info into it
@@ -13,24 +19,17 @@ public class FileWriter implements IWriter, Closeable, AutoCloseable {
     private Writer writer;
 
     /**
+     * A constructor with one parameter
      *
      * @param path is a file path or a file name
      * @throws WriterException is thrown if something goes wrong
      */
     public FileWriter(final String path) throws WriterException {
-        try {
-            file = new File(path);
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-//            writer = new BufferedWriter(new java.io.FileWriter(path));
-            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), StandardCharsets.UTF_8));
-        } catch (IOException e) {
-            throw new WriterException(e);
-        }
+        this(new File(path));
     }
 
     /**
+     * A constructor with one parameter
      *
      * @param file is a file
      * @throws WriterException is thrown if something goes wrong
@@ -41,13 +40,11 @@ public class FileWriter implements IWriter, Closeable, AutoCloseable {
             if (!file.exists()) {
                 this.file.createNewFile();
             }
-//            writer = new BufferedWriter(new java.io.FileWriter(this.file));
             writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8));
         } catch (IOException e) {
             throw new WriterException(e);
         }
     }
-
 
     @Override
     public void close() throws WriterException {
@@ -66,5 +63,4 @@ public class FileWriter implements IWriter, Closeable, AutoCloseable {
             throw new WriterException(e);
         }
     }
-
 }

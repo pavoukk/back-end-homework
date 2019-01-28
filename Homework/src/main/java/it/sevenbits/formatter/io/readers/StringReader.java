@@ -11,6 +11,7 @@ public class StringReader implements IReader {
 
     /**
      * Constructor
+     *
      * @param string incoming string
      */
     public StringReader(final String string) {
@@ -20,6 +21,7 @@ public class StringReader implements IReader {
 
     /**
      * The implemented method.
+     *
      * @return boolean
      */
     public boolean hasNext() {
@@ -28,6 +30,7 @@ public class StringReader implements IReader {
 
     /**
      * The implemented method.
+     *
      * @return char
      */
     public char read() {
@@ -37,8 +40,12 @@ public class StringReader implements IReader {
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         StringReader that = (StringReader) o;
         return current == that.current &&
                 Objects.equals(string, that.string);

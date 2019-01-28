@@ -11,7 +11,6 @@ import java.io.IOException;
 public interface IFormatter {
 
     /**
-     *
      * @param reader is input info
      * @param writer is output info
      * @throws IOException if something goes wrong

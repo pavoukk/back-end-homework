@@ -7,7 +7,6 @@ import java.io.IOException;
  */
 public class WriterException extends IOException {
     /**
-     *
      * @param message says what actually gone wrong
      */
     public WriterException(final String message) {
@@ -15,16 +14,14 @@ public class WriterException extends IOException {
     }
 
     /**
-     *
      * @param message says whart actually gone wrong
-     * @param cause input cause
+     * @param cause   input cause
      */
     public WriterException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
     /**
-     *
      * @param cause input cause
      */
     public WriterException(final Throwable cause) {

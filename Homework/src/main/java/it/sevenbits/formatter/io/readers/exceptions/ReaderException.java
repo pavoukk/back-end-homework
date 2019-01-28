@@ -8,7 +8,6 @@ import java.io.IOException;
  */
 public class ReaderException extends IOException {
     /**
-     *
      * @param message says what actually gone wrong
      */
     public ReaderException(final String message) {
@@ -16,16 +15,14 @@ public class ReaderException extends IOException {
     }
 
     /**
-     *
      * @param message says what actually gone wrong
-     * @param cause input cause
+     * @param cause   input cause
      */
     public ReaderException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
     /**
-     *
      * @param cause input cause
      */
     public ReaderException(final Throwable cause) {
