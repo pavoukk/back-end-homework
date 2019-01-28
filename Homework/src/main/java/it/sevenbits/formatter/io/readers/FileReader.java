@@ -1,6 +1,6 @@
-package it.sevenbits.formatter.readers;
+package it.sevenbits.formatter.io.readers;
 
-import it.sevenbits.formatter.exceptions.ReaderException;
+import it.sevenbits.formatter.io.readers.exceptions.ReaderException;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

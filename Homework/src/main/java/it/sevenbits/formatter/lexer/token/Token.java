@@ -1,4 +1,4 @@
-package it.sevenbits.formatter.token;
+package it.sevenbits.formatter.lexer.token;
 
 import java.util.Objects;
 
@@ -10,8 +10,7 @@ public class Token implements IToken {
     private String lexeme;
 
     /**
-     *
-     * @param name the lexeme's name
+     * @param name   the lexeme's name
      * @param lexeme is a string
      */
     public Token(final String name, final String lexeme) {

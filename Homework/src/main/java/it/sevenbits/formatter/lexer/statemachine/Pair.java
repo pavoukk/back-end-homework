@@ -1,4 +1,4 @@
-package it.sevenbits.formatter.lexer;
+package it.sevenbits.formatter.lexer.statemachine;
 
 import java.util.Objects;
 

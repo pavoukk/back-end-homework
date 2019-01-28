@@ -1,6 +1,6 @@
-package it.sevenbits.formatter;
+package it.sevenbits.formatter.io.readers;
 
-import it.sevenbits.formatter.io.exceptions.ReaderException;
+import it.sevenbits.formatter.io.readers.exceptions.ReaderException;
 
 /**
  * IReader is an interface that describes stream reading symbol by symbol.

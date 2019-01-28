@@ -1,7 +1,7 @@
 package it.sevenbits.formatter.lexer;
 
-import it.sevenbits.formatter.exceptions.ReaderException;
-import it.sevenbits.formatter.token.IToken;
+import it.sevenbits.formatter.io.readers.exceptions.ReaderException;
+import it.sevenbits.formatter.lexer.token.IToken;
 
 /**
  * ILexer is an interface that is used to read some source's info and translate it into tokens.

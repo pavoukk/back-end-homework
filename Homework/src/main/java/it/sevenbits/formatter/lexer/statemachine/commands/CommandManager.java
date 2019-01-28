@@ -20,64 +20,114 @@ public class CommandManager {
     private final String ID = "ID";
     private final String SLASH = "SLASH";
     private final String ASTERISK = "ASTERISK";
-    private final String BACKSLASH = "BACKSLASH";
-    private final String STRING = "STRING";
+    private final String STRING_LITERAL = "STRING_LITERAL";
 
     public CommandManager(final CommandContext commandContext) {
         this.commandContext = commandContext;
-        result = new ResultCommand(commandContext, null);
-        ICommand append = new AppendingCommand(commandContext, null);
-        ICommand ignore = new IgnoringCommand(commandContext, null);
+
+        result = new ResultCommand(commandContext);
+        ICommand append = new AppendingCommand(commandContext);
+        ICommand ignore = new IgnoringCommand(commandContext);
+
         ICommand appendAndReturn = new AppendingCommand(commandContext, result);
         ICommand reserveAndReturn = new ReservingCommand(commandContext, result);
         ICommand ignoreAndReturn = new IgnoringCommand(commandContext, result);
+
+        ICommand appendAndRecognizeAndReturn = new AppendingCommand(commandContext, new TypeRecognitionCommand(commandContext, result));
+        ICommand appendAndRecognize = new AppendingCommand(commandContext, new TypeRecognitionCommand(commandContext));
+
         State defaultState = new State("DEFAULT");
+        State idCollectionState = new State("ID_COLLECTION");
+        State stringLiteralCollectionState = new State("STRING_LITERAL_COLLECTION_STATE");
         State oneLineCommentCollectionState = new State("ONE_LINE_COMMENT_COLLECTION");
+        State commentSuspicionState = new State("ONE_LINE_COMMENT_SUSPICION");
         State manyLinesCommentCollectionState = new State("MANY_LINES_COMMENT_COLLECTION");
-        State wordCollectionState = new State("WORD_COLLECTION");
+        State manyLinesCommentsEndSuspicionState = new State("MANY_LINES_COMMENT_SUSPICION");
+
         commandMap = new HashMap<>();
-        commandMap.put(new Pair<>(defaultState, NEW_LINE), ignore);
+        commandMap.put(new Pair<>(defaultState, CURLY_BRACKET_OPEN), appendAndRecognizeAndReturn);
+        commandMap.put(new Pair<>(defaultState, CURLY_BRACKET_CLOSED), appendAndRecognizeAndReturn);
+        commandMap.put(new Pair<>(defaultState, ROUND_BRACKET_OPEN), appendAndRecognizeAndReturn);
+        commandMap.put(new Pair<>(defaultState, ROUND_BRACKET_CLOSED), appendAndRecognizeAndReturn);
+        commandMap.put(new Pair<>(defaultState, SEMICOLON), appendAndRecognizeAndReturn);
         commandMap.put(new Pair<>(defaultState, SPACE), ignore);
-        commandMap.put(new Pair<>(defaultState, CURLY_BRACKET_OPEN), appendAndReturn); //here was append
-        commandMap.put(new Pair<>(defaultState, CURLY_BRACKET_CLOSED), appendAndReturn); //TODO add command for {}();
-        commandMap.put(new Pair<>(defaultState, ROUND_BRACKET_OPEN), appendAndReturn); //TODO append does not suit
-        commandMap.put(new Pair<>(defaultState, ROUND_BRACKET_CLOSED), appendAndReturn); // here was append
-        commandMap.put(new Pair<>(defaultState, SEMICOLON), appendAndReturn); // here was append
-        commandMap.put(new Pair<>(defaultState, ID), append); //here was append // no
-        commandMap.put(new Pair<>(defaultState, SLASH), append); //here was append // no
-        commandMap.put(new Pair<>(defaultState, ASTERISK), appendAndReturn); // here was append // no
-        commandMap.put(new Pair<>(defaultState, BACKSLASH), appendAndReturn); // here was append // no
-        commandMap.put(new Pair<>(defaultState, STRING), append);
+        commandMap.put(new Pair<>(defaultState, NEW_LINE), ignore);
+        commandMap.put(new Pair<>(defaultState, SLASH), appendAndRecognize);
+        commandMap.put(new Pair<>(defaultState, ASTERISK), appendAndRecognizeAndReturn);
+        commandMap.put(new Pair<>(defaultState, STRING_LITERAL), appendAndRecognize);
+        commandMap.put(new Pair<>(defaultState, ID), appendAndRecognize);
 
-        commandMap.put(new Pair<>(wordCollectionState, "STRING"), append);
-        commandMap.put(new Pair<>(wordCollectionState, "NEW_LINE"), result);
-        commandMap.put(new Pair<>(wordCollectionState, "SPACE"), result);
-        commandMap.put(new Pair<>(wordCollectionState, "OPENING_BRACKET"), result);
-        commandMap.put(new Pair<>(wordCollectionState, "CLOSING_BRACKET"), result);
-        commandMap.put(new Pair<>(wordCollectionState, "OPENING_PARENTHESIS"), result);
-        commandMap.put(new Pair<>(wordCollectionState, "CLOSING_PARENTHESIS"), result);
-        commandMap.put(new Pair<>(wordCollectionState, "SEMICOLON"), result);
-        commandMap.put(new Pair<>(wordCollectionState, "ONE_LINE_COMMENT"), result);
-        commandMap.put(new Pair<>(wordCollectionState, "MANY_LINES_COMMENT_OPENING"), result);
+        commandMap.put(new Pair<>(idCollectionState, CURLY_BRACKET_OPEN), reserveAndReturn);
+        commandMap.put(new Pair<>(idCollectionState, CURLY_BRACKET_CLOSED), reserveAndReturn);
+        commandMap.put(new Pair<>(idCollectionState, ROUND_BRACKET_OPEN), reserveAndReturn);
+        commandMap.put(new Pair<>(idCollectionState, ROUND_BRACKET_CLOSED), reserveAndReturn);
+        commandMap.put(new Pair<>(idCollectionState, SEMICOLON), reserveAndReturn);
+        commandMap.put(new Pair<>(idCollectionState, SPACE), result);
+        commandMap.put(new Pair<>(idCollectionState, NEW_LINE), result);
+        commandMap.put(new Pair<>(idCollectionState, SLASH), reserveAndReturn);
+        commandMap.put(new Pair<>(idCollectionState, ASTERISK), reserveAndReturn);
+        commandMap.put(new Pair<>(idCollectionState, STRING_LITERAL), reserveAndReturn);
+        commandMap.put(new Pair<>(idCollectionState, ID), append);
 
-        commandMap.put(new Pair<>(oneLineCommentCollectionState, "STRING"), append);
-        commandMap.put(new Pair<>(oneLineCommentCollectionState, "SPACE"), append);
-        commandMap.put(new Pair<>(oneLineCommentCollectionState, "OPENING_BRACKET"), append);
-        commandMap.put(new Pair<>(oneLineCommentCollectionState, "CLOSING_BRACKET"), append);
-        commandMap.put(new Pair<>(oneLineCommentCollectionState, "OPENING_PARENTHESIS"), append);
-        commandMap.put(new Pair<>(oneLineCommentCollectionState, "CLOSING_PARENTHESIS"), append);
-        commandMap.put(new Pair<>(oneLineCommentCollectionState, "SEMICOLON"), append);
-        commandMap.put(new Pair<>(oneLineCommentCollectionState, "NEW_LINE"), result);
+        commandMap.put(new Pair<>(stringLiteralCollectionState, STRING_LITERAL), appendAndReturn);
+        commandMap.put(new Pair<>(stringLiteralCollectionState, CURLY_BRACKET_OPEN), append);
+        commandMap.put(new Pair<>(stringLiteralCollectionState, CURLY_BRACKET_CLOSED), append);
+        commandMap.put(new Pair<>(stringLiteralCollectionState, ROUND_BRACKET_OPEN), append);
+        commandMap.put(new Pair<>(stringLiteralCollectionState, ROUND_BRACKET_CLOSED), append);
+        commandMap.put(new Pair<>(stringLiteralCollectionState, ID), append);
+        commandMap.put(new Pair<>(stringLiteralCollectionState, SEMICOLON), append);
+        commandMap.put(new Pair<>(stringLiteralCollectionState, SPACE), append);
+        commandMap.put(new Pair<>(stringLiteralCollectionState, NEW_LINE), append);
+        commandMap.put(new Pair<>(stringLiteralCollectionState, SLASH), append);
+        commandMap.put(new Pair<>(stringLiteralCollectionState, ASTERISK), append);
 
-        commandMap.put(new Pair<>(manyLinesCommentCollectionState, "STRING"), append);
-        commandMap.put(new Pair<>(manyLinesCommentCollectionState, "NEW_LINE"), append);
-        commandMap.put(new Pair<>(manyLinesCommentCollectionState, "SPACE"), append);
-        commandMap.put(new Pair<>(manyLinesCommentCollectionState, "OPENING_BRACKET"), append);
-        commandMap.put(new Pair<>(manyLinesCommentCollectionState, "CLOSING_BRACKET"), append);
-        commandMap.put(new Pair<>(manyLinesCommentCollectionState, "OPENING_PARENTHESIS"), append);
-        commandMap.put(new Pair<>(manyLinesCommentCollectionState, "CLOSING_PARENTHESIS"), append);
-        commandMap.put(new Pair<>(manyLinesCommentCollectionState, "SEMICOLON"), append);
-        commandMap.put(new Pair<>(manyLinesCommentCollectionState, "MANY_LINES_COMMENT_CLOSING"), result);
+        commandMap.put(new Pair<>(commentSuspicionState, CURLY_BRACKET_OPEN), reserveAndReturn);
+        commandMap.put(new Pair<>(commentSuspicionState, CURLY_BRACKET_CLOSED), reserveAndReturn);
+        commandMap.put(new Pair<>(commentSuspicionState, ROUND_BRACKET_OPEN), reserveAndReturn);
+        commandMap.put(new Pair<>(commentSuspicionState, ROUND_BRACKET_CLOSED), reserveAndReturn);
+        commandMap.put(new Pair<>(commentSuspicionState, SEMICOLON), reserveAndReturn);
+        commandMap.put(new Pair<>(commentSuspicionState, ID), reserveAndReturn);
+        commandMap.put(new Pair<>(commentSuspicionState, SPACE), reserveAndReturn);
+        commandMap.put(new Pair<>(commentSuspicionState, NEW_LINE), reserveAndReturn);
+        commandMap.put(new Pair<>(commentSuspicionState, STRING_LITERAL), reserveAndReturn);
+        commandMap.put(new Pair<>(commentSuspicionState, SLASH), appendAndRecognize);
+        commandMap.put(new Pair<>(commentSuspicionState, ASTERISK), appendAndRecognize);
+
+        commandMap.put(new Pair<>(oneLineCommentCollectionState, NEW_LINE), result);
+        commandMap.put(new Pair<>(oneLineCommentCollectionState, CURLY_BRACKET_OPEN), append);
+        commandMap.put(new Pair<>(oneLineCommentCollectionState, CURLY_BRACKET_CLOSED), append);
+        commandMap.put(new Pair<>(oneLineCommentCollectionState, ROUND_BRACKET_OPEN), append);
+        commandMap.put(new Pair<>(oneLineCommentCollectionState, ROUND_BRACKET_CLOSED), append);
+        commandMap.put(new Pair<>(oneLineCommentCollectionState, SEMICOLON), append);
+        commandMap.put(new Pair<>(oneLineCommentCollectionState, ID), append);
+        commandMap.put(new Pair<>(oneLineCommentCollectionState, SPACE), append);
+        commandMap.put(new Pair<>(oneLineCommentCollectionState, SLASH), append);
+        commandMap.put(new Pair<>(oneLineCommentCollectionState, ASTERISK), append);
+        commandMap.put(new Pair<>(oneLineCommentCollectionState, STRING_LITERAL), append);
+
+        commandMap.put(new Pair<>(manyLinesCommentCollectionState, ASTERISK), append); // maybe end of the comment
+        commandMap.put(new Pair<>(manyLinesCommentCollectionState, CURLY_BRACKET_OPEN), append);
+        commandMap.put(new Pair<>(manyLinesCommentCollectionState, CURLY_BRACKET_CLOSED), append);
+        commandMap.put(new Pair<>(manyLinesCommentCollectionState, ROUND_BRACKET_OPEN), append);
+        commandMap.put(new Pair<>(manyLinesCommentCollectionState, ROUND_BRACKET_CLOSED), append);
+        commandMap.put(new Pair<>(manyLinesCommentCollectionState, SEMICOLON), append);
+        commandMap.put(new Pair<>(manyLinesCommentCollectionState, ID), append);
+        commandMap.put(new Pair<>(manyLinesCommentCollectionState, SPACE), append);
+        commandMap.put(new Pair<>(manyLinesCommentCollectionState, NEW_LINE), append);
+        commandMap.put(new Pair<>(manyLinesCommentCollectionState, SLASH), append);
+        commandMap.put(new Pair<>(manyLinesCommentCollectionState, STRING_LITERAL), append);
+
+        commandMap.put(new Pair<>(manyLinesCommentsEndSuspicionState, SLASH), appendAndReturn); // end of the comment
+        commandMap.put(new Pair<>(manyLinesCommentsEndSuspicionState, CURLY_BRACKET_OPEN), append);
+        commandMap.put(new Pair<>(manyLinesCommentsEndSuspicionState, CURLY_BRACKET_CLOSED), append);
+        commandMap.put(new Pair<>(manyLinesCommentsEndSuspicionState, ROUND_BRACKET_OPEN), append);
+        commandMap.put(new Pair<>(manyLinesCommentsEndSuspicionState, ROUND_BRACKET_CLOSED), append);
+        commandMap.put(new Pair<>(manyLinesCommentsEndSuspicionState, SEMICOLON), append);
+        commandMap.put(new Pair<>(manyLinesCommentsEndSuspicionState, ID), append);
+        commandMap.put(new Pair<>(manyLinesCommentsEndSuspicionState, SPACE), append);
+        commandMap.put(new Pair<>(manyLinesCommentsEndSuspicionState, NEW_LINE), append);
+        commandMap.put(new Pair<>(manyLinesCommentsEndSuspicionState, ASTERISK), append);
+        commandMap.put(new Pair<>(manyLinesCommentsEndSuspicionState, STRING_LITERAL), append);
     }
 
     public ICommand getCommand(final State state, final String type) {

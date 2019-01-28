@@ -1,6 +1,4 @@
-package it.sevenbits.formatter.string.readers;
-
-import it.sevenbits.formatter.IReader;
+package it.sevenbits.formatter.io.readers;
 
 import java.util.Objects;
 

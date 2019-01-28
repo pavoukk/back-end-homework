@@ -1,4 +1,4 @@
-package it.sevenbits.formatter.io.writers;
+package it.sevenbits.formatter.io.writers.exceptions;
 
 import java.io.IOException;
 

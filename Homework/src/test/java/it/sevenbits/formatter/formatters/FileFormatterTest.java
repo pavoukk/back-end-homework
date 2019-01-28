@@ -1,10 +1,10 @@
 package it.sevenbits.formatter.formatters;
 
-import it.sevenbits.formatter.exceptions.ReaderException;
-import it.sevenbits.formatter.exceptions.WriterException;
-import it.sevenbits.formatter.factories.LexerFactory;
-import it.sevenbits.formatter.readers.FileReader;
-import it.sevenbits.formatter.writers.FileWriter;
+import it.sevenbits.formatter.io.readers.exceptions.ReaderException;
+import it.sevenbits.formatter.io.writers.exceptions.WriterException;
+import it.sevenbits.formatter.lexer.factories.LexerFactory;
+import it.sevenbits.formatter.io.readers.FileReader;
+import it.sevenbits.formatter.io.writers.FileWriter;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package it.sevenbits.formatter.factories;
+package it.sevenbits.formatter.lexer.factories;
 
 import it.sevenbits.formatter.lexer.ILexer;
 import it.sevenbits.formatter.io.readers.IReader;

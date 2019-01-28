@@ -1,9 +1,9 @@
 package it.sevenbits.formatter;
 
 import it.sevenbits.formatter.formatters.StringFormatter;
-import it.sevenbits.formatter.readers.IReader;
-import it.sevenbits.formatter.readers.StringReader;
-import it.sevenbits.formatter.writers.StringWriter;
+import it.sevenbits.formatter.io.readers.IReader;
+import it.sevenbits.formatter.io.readers.StringReader;
+import it.sevenbits.formatter.io.writers.StringWriter;
 import org.junit.*;
 
 import java.io.IOException;

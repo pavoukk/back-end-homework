@@ -1,6 +1,6 @@
-package it.sevenbits.formatter.writers;
+package it.sevenbits.formatter.io.writers;
 
-import it.sevenbits.formatter.exceptions.WriterException;
+import it.sevenbits.formatter.io.writers.exceptions.WriterException;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
