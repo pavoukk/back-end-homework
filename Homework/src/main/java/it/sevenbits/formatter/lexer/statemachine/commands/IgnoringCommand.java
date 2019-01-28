@@ -1,10 +1,10 @@
 package it.sevenbits.formatter.lexer.statemachine.commands;
 
 /**
- * ResultCommand sends a signal saying token's collection completed
+ * IgnoringCommand does nothing it's depressed =)
  */
-public class ResultCommand implements ICommand {
-    private final CommandContext commandContext;
+public class IgnoringCommand implements ICommand {
+    private CommandContext commandContext;
     private ICommand next;
 
     /**
@@ -12,7 +12,7 @@ public class ResultCommand implements ICommand {
      *
      * @param commandContext is a command context
      */
-    public ResultCommand(final CommandContext commandContext) {
+    public IgnoringCommand(final CommandContext commandContext) {
         this.commandContext = commandContext;
     }
 
@@ -22,16 +22,13 @@ public class ResultCommand implements ICommand {
      * @param commandContext is a command context
      * @param next           is the next command to execute
      */
-    public ResultCommand(final CommandContext commandContext, final ICommand next) {
+    public IgnoringCommand(final CommandContext commandContext, final ICommand next) {
         this.commandContext = commandContext;
-
         this.next = next;
     }
 
     @Override
     public void execute() {
-        commandContext.setPoison(true);
-
         next();
     }
 

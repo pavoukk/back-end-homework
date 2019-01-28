@@ -1,48 +1,56 @@
-package it.sevenbits.formatter.lexer;
+package it.sevenbits.formatter.lexer.statemachine.commands;
 
 public class CommandContext {
-    private Symbol currentSymbol;
     private StringBuilder lexemeBuffer;
+    private char currentSymbol;
+    private String lexemeType;
     private boolean poison;
-    private Symbol ignoredSymbol;
+    private char reservedSymbol;
 
     public CommandContext() {
 
     }
-    public CommandContext(final Symbol currentSymbol, final StringBuilder lexemeBuffer) {
-        this.currentSymbol = currentSymbol;
+    public CommandContext(final StringBuilder lexemeBuffer) {
         this.lexemeBuffer = lexemeBuffer;
-    }
-
-    public Symbol getCurrentSymbol() {
-        return currentSymbol;
-    }
-
-    public void setCurrentSymbol(Symbol currentSymbol) {
-        this.currentSymbol = currentSymbol;
     }
 
     public StringBuilder getLexemeBuffer() {
         return lexemeBuffer;
     }
 
-    public void setLexemeBuffer(StringBuilder lexemeBuffer) {
+    public void setLexemeBuffer(final StringBuilder lexemeBuffer) {
         this.lexemeBuffer = lexemeBuffer;
+    }
+
+    public char getCurrentSymbol() {
+        return currentSymbol;
+    }
+
+    public void setCurrentSymbol(final char currentSymbol) {
+        this.currentSymbol = currentSymbol;
+    }
+
+    public String getLexemeType() {
+        return lexemeType;
+    }
+
+    public void setLexemeType(final String lexemeType) {
+        this.lexemeType = lexemeType;
     }
 
     public boolean isPoison() {
         return poison;
     }
 
-    public void setPoison(boolean poison) {
+    public void setPoison(final boolean poison) {
         this.poison = poison;
     }
 
-    public Symbol getIgnoredSymbol() {
-        return ignoredSymbol;
+    public char getReservedSymbol() {
+        return reservedSymbol;
     }
 
-    public void setIgnoredSymbol(Symbol ignoredSymbol) {
-        this.ignoredSymbol = ignoredSymbol;
+    public void setReservedSymbol(final char reservedSymbol) {
+        this.reservedSymbol = reservedSymbol;
     }
 }
