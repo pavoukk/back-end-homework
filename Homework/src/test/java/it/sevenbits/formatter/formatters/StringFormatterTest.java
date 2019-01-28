@@ -1,12 +1,10 @@
 package it.sevenbits.formatter.formatters;
 
-import it.sevenbits.formatter.formatters.StringFormatter;
 import it.sevenbits.formatter.io.readers.IReader;
 import it.sevenbits.formatter.io.readers.StringReader;
 import it.sevenbits.formatter.io.writers.StringWriter;
+import it.sevenbits.formatter.lexer.factories.LexerFactory;
 import org.junit.*;
-
-import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
@@ -15,7 +13,7 @@ public class StringFormatterTest {
     @Test
     public void formatTestSimple() {
         IReader reader1 = new StringReader("aaa { bbbb; ccc;}");
-        StringFormatter formatter = new StringFormatter();
+        IFormatter formatter = new StateMachineFormatter(new LexerFactory());
         StringWriter writer = new StringWriter();
         try {
             formatter.format(reader1, writer);
@@ -23,29 +21,29 @@ public class StringFormatterTest {
                     "    bbbb;\n" +
                     "    ccc;\n" +
                     "}");
-        } catch (IOException e) {
+        } catch (FormatterException e) {
             e.printStackTrace();
         }
     }
 
     @Test
     public void formatTestNotSimple() {
-        IReader reader2 = new StringReader("public void func(){int a = 0;int b = 5;if((a + b)>=4){int a = 4;int b = 6;return a + b;}return 0;}");
-        StringFormatter formatter = new StringFormatter();
+        IReader reader2 = new StringReader("public void func(){int a = 0;int b = (5+1);if((a + b)>=4){int a = 4;int b = 6;return a + b;}return 0;}");
+        IFormatter formatter = new StateMachineFormatter(new LexerFactory());
         StringWriter writer = new StringWriter();
         try {
             formatter.format(reader2, writer);
             assertEquals(writer.getString(), "public void func() {\n" +
                     "    int a = 0;\n" +
-                    "    int b = 5;\n" +
-                    "    if((a + b)>=4) {\n" +
+                    "    int b =(5+1);\n" +
+                    "    if((a + b) >=4) {\n" +
                     "        int a = 4;\n" +
                     "        int b = 6;\n" +
                     "        return a + b;\n" +
                     "    }\n" +
                     "    return 0;\n" +
                     "}");
-        } catch (IOException e) {
+        } catch (FormatterException e) {
             e.printStackTrace();
         }
     }
@@ -65,7 +63,7 @@ public class StringFormatterTest {
                     "        b = a;\n" +
                     "        return b;\n" +
                     "    }");
-        } catch (IOException e) {
+        } catch (FormatterException e) {
             e.printStackTrace();
         }
     }
@@ -84,7 +82,7 @@ public class StringFormatterTest {
                     "            arr[i] = 0;\n" +
                     "        }\n" +
                     "    }");
-        } catch (IOException ex) {
+        } catch (FormatterException ex) {
             ex.printStackTrace();
         }
     }
@@ -106,8 +104,7 @@ public class StringFormatterTest {
                     "        }\n" +
                     "    }\n" +
                     "}");
-        } catch (
-                IOException e) {
+        } catch (FormatterException e) {
             e.printStackTrace();
         }
     }

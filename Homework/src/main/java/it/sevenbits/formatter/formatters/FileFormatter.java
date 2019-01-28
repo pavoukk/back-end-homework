@@ -45,10 +45,9 @@ public class FileFormatter implements IFormatter {
      *
      * @param reader is input info
      * @param writer is output info
-     * @throws ReaderException is thrown if something goes wrong
-     * @throws WriterException is thrown if something goes wrong
+     * @throws FormatterException is thrown if something goes wrong
      */
-    public void format(final IReader reader, final IWriter writer) throws ReaderException, WriterException {
+    public void format(final IReader reader, final IWriter writer) throws FormatterException {
         ILexer lexer = factory.createLexer(reader);
         IToken token;
         IToken bufToken;
@@ -56,56 +55,61 @@ public class FileFormatter implements IFormatter {
         int countOpBr = 0;
         boolean write;
         boolean count = true;
-        token = lexer.readToken();
-        bufToken = token;
-        while (reader.hasNext()) {
-            write = false;
-            if (token.getName().equals(openingBracketName)) {
-                countOpBr++;
-                write = true;
-                writer.write(space);
-            }
-            if (token.getName().equals(semicolonName)) {
-                write = true;
-            }
-            if (token.getName().equals(closingBracketName)) {
-                if (count) {
-                    countClBr++;
-                }
-                count = true;
-                write = true;
-            }
-            char[] arr = token.getLexeme().toCharArray();
-            for (char ch : arr) {
-                writer.write(ch);
-            }
-            if (reader.hasNext()) {
-                bufToken = token;
-                token = lexer.readToken();
-            }
-            if (token.getName().equals(closingBracketName)) {
-                count = false;
-                countClBr++;
-            }
-            if (write) {
-                writer.write(newLine);
-                for (int j = 0; j < countOpBr - countClBr; j++) {
-                    for (int i = 0; i < spaceAmount; i++) {
-                        writer.write(space);
-                    }
-                }
-            } else {
-                if (!(noSpace.contains(token.getName()) || noSpace.contains(bufToken.getName()))) {
+
+        try {
+            token = lexer.readToken();
+            bufToken = token;
+            while (reader.hasNext()) {
+                write = false;
+                if (token.getName().equals(openingBracketName)) {
+                    countOpBr++;
+                    write = true;
                     writer.write(space);
                 }
-            }
-
-            if (!reader.hasNext()) {
-                arr = token.getLexeme().toCharArray();
+                if (token.getName().equals(semicolonName)) {
+                    write = true;
+                }
+                if (token.getName().equals(closingBracketName)) {
+                    if (count) {
+                        countClBr++;
+                    }
+                    count = true;
+                    write = true;
+                }
+                char[] arr = token.getLexeme().toCharArray();
                 for (char ch : arr) {
                     writer.write(ch);
                 }
+                if (reader.hasNext()) {
+                    bufToken = token;
+                    token = lexer.readToken();
+                }
+                if (token.getName().equals(closingBracketName)) {
+                    count = false;
+                    countClBr++;
+                }
+                if (write) {
+                    writer.write(newLine);
+                    for (int j = 0; j < countOpBr - countClBr; j++) {
+                        for (int i = 0; i < spaceAmount; i++) {
+                            writer.write(space);
+                        }
+                    }
+                } else {
+                    if (!(noSpace.contains(token.getName()) || noSpace.contains(bufToken.getName()))) {
+                        writer.write(space);
+                    }
+                }
+
+                if (!reader.hasNext()) {
+                    arr = token.getLexeme().toCharArray();
+                    for (char ch : arr) {
+                        writer.write(ch);
+                    }
+                }
             }
+        } catch (WriterException | ReaderException e) {
+            throw new FormatterException(e);
         }
     }
 }

@@ -1,5 +1,6 @@
 package it.sevenbits.formatter;
 
+import it.sevenbits.formatter.formatters.FormatterException;
 import it.sevenbits.formatter.io.readers.exceptions.ReaderException;
 import it.sevenbits.formatter.io.writers.exceptions.WriterException;
 import it.sevenbits.formatter.lexer.factories.ILexerFactory;
@@ -19,7 +20,7 @@ public final class Main {
             ILexerFactory factory = new LexerFactory();
             FileFormatter formatter = new FileFormatter(factory);
             formatter.format(reader, writer);
-        } catch (ReaderException | WriterException e) {
+        } catch (ReaderException | WriterException | FormatterException e) {
             e.printStackTrace();
         }
     }
