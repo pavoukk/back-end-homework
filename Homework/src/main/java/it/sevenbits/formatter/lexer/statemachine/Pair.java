@@ -2,25 +2,43 @@ package it.sevenbits.formatter.lexer.statemachine;
 
 import java.util.Objects;
 
-public class Pair <T, V> {
+/**
+ * A container of some two objects
+ *
+ * @param <T> first object
+ * @param <V> second object
+ */
+public class Pair<T, V> {
     private final T first;
     private final V second;
 
+    /**
+     * A constructor with two parameters
+     *
+     * @param first  set first
+     * @param second set seconnd
+     */
     public Pair(final T first, final V second) {
         this.first = first;
         this.second = second;
     }
 
+    /**
+     * @return first object
+     */
     public T getFirst() {
         return first;
     }
 
+    /**
+     * @return second object
+     */
     public V getSecond() {
         return second;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Pair<?, ?> pair = (Pair<?, ?>) o;

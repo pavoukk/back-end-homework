@@ -6,10 +6,14 @@ import it.sevenbits.formatter.lexer.statemachine.State;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * CommandManager with commands for state machine transitions
+ */
 public class CommandManager {
     private Map<Pair<State, String>, ICommand> commandMap;
     private CommandContext commandContext;
     private ICommand result;
+
     private final String CURLY_BRACKET_OPEN = "CURLY_BRACKET_OPEN";
     private final String CURLY_BRACKET_CLOSED = "CURLY_BRACKET_CLOSED";
     private final String ROUND_BRACKET_OPEN = "ROUND_BRACKET_OPEN";
@@ -22,6 +26,11 @@ public class CommandManager {
     private final String ASTERISK = "ASTERISK";
     private final String STRING_LITERAL = "STRING_LITERAL";
 
+    /**
+     * A constructor with one parameter
+     *
+     * @param commandContext context
+     */
     public CommandManager(final CommandContext commandContext) {
         this.commandContext = commandContext;
 
@@ -33,7 +42,8 @@ public class CommandManager {
         ICommand reserveAndReturn = new ReservingCommand(commandContext, result);
         ICommand ignoreAndReturn = new IgnoringCommand(commandContext, result);
 
-        ICommand appendAndRecognizeAndReturn = new AppendingCommand(commandContext, new TypeRecognitionCommand(commandContext, result));
+        ICommand appendAndRecognizeAndReturn = new AppendingCommand(commandContext,
+                new TypeRecognitionCommand(commandContext, result));
         ICommand appendAndRecognize = new AppendingCommand(commandContext, new TypeRecognitionCommand(commandContext));
 
         State defaultState = new State("DEFAULT");
@@ -130,6 +140,13 @@ public class CommandManager {
         commandMap.put(new Pair<>(manyLinesCommentsEndSuspicionState, STRING_LITERAL), append);
     }
 
+    /**
+     * Gets the next command for transition
+     *
+     * @param state current state
+     * @param type  type of current character
+     * @return next command
+     */
     public ICommand getCommand(final State state, final String type) {
         return commandMap.getOrDefault(new Pair<>(state, type), result);
     }
