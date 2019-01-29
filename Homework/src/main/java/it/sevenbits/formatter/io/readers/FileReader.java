@@ -44,7 +44,7 @@ public class FileReader implements IReader, Closeable, AutoCloseable {
             reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
             readSymbol = reader.read();
         } catch (IOException e) {
-            throw new ReaderException(e);
+            throw new ReaderException("Cannot create a new file", e);
         }
     }
 
@@ -60,7 +60,7 @@ public class FileReader implements IReader, Closeable, AutoCloseable {
             readSymbol = reader.read();
             return symbol;
         } catch (IOException e) {
-            throw new ReaderException(e);
+            throw new ReaderException("Cannot read any more characters", e);
         }
     }
 
@@ -69,7 +69,7 @@ public class FileReader implements IReader, Closeable, AutoCloseable {
         try {
             reader.close();
         } catch (IOException e) {
-            throw new ReaderException(e);
+            throw new ReaderException("Cannot close the file", e);
         }
     }
 }

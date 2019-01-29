@@ -1,4 +1,4 @@
-package it.sevenbits.formatter.formatters;
+package it.sevenbits.formatter.formatters.exceptions;
 
 /**
  * FormatterException is an exception class.

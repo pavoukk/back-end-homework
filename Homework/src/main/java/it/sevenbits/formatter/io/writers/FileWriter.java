@@ -42,7 +42,7 @@ public class FileWriter implements IWriter, Closeable, AutoCloseable {
             }
             writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8));
         } catch (IOException e) {
-            throw new WriterException(e);
+            throw new WriterException("Cannot create a new file", e);
         }
     }
 
@@ -51,7 +51,7 @@ public class FileWriter implements IWriter, Closeable, AutoCloseable {
         try {
             writer.close();
         } catch (IOException e) {
-            throw new WriterException(e);
+            throw new WriterException("Cannot close the file", e);
         }
     }
 
@@ -60,7 +60,7 @@ public class FileWriter implements IWriter, Closeable, AutoCloseable {
         try {
             writer.write(ch);
         } catch (IOException e) {
-            throw new WriterException(e);
+            throw new WriterException("Cannot write any more characters", e);
         }
     }
 }

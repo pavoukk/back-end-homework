@@ -1,5 +1,6 @@
 package it.sevenbits.formatter.formatters;
 
+import it.sevenbits.formatter.formatters.exceptions.FormatterException;
 import it.sevenbits.formatter.io.readers.IReader;
 import it.sevenbits.formatter.io.readers.exceptions.ReaderException;
 import it.sevenbits.formatter.io.writers.IWriter;
@@ -93,8 +94,10 @@ public class StringFormatter implements IFormatter {
                     }
                 }
             }
-        } catch (ReaderException | WriterException e) {
-            throw new FormatterException(e);
+        } catch (WriterException e) {
+            throw new FormatterException("Cannot write any more characters", e);
+        } catch (ReaderException e) {
+            throw new FormatterException("Cannot read any more characters", e);
         }
     }
 }

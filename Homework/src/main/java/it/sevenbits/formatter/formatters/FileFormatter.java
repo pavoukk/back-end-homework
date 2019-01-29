@@ -1,7 +1,9 @@
 package it.sevenbits.formatter.formatters;
 
+import it.sevenbits.formatter.formatters.exceptions.FormatterException;
 import it.sevenbits.formatter.io.readers.exceptions.ReaderException;
 import it.sevenbits.formatter.io.writers.exceptions.WriterException;
+import it.sevenbits.formatter.lexer.exceptions.LexerException;
 import it.sevenbits.formatter.lexer.token.IToken;
 import it.sevenbits.formatter.lexer.factories.ILexerFactory;
 import it.sevenbits.formatter.lexer.ILexer;
@@ -108,8 +110,12 @@ public class FileFormatter implements IFormatter {
                     }
                 }
             }
-        } catch (WriterException | ReaderException e) {
-            throw new FormatterException(e);
+        } catch (WriterException e) {
+            throw new FormatterException("Cannot write any more characters", e);
+        } catch (ReaderException e) {
+            throw new FormatterException("Cannot read any more characters", e);
+        } catch (LexerException e) {
+            throw new FormatterException("Cannot read any more tokens", e);
         }
     }
 }

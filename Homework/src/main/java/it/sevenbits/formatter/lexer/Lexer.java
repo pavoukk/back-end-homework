@@ -1,6 +1,7 @@
 package it.sevenbits.formatter.lexer;
 
 import it.sevenbits.formatter.io.readers.exceptions.ReaderException;
+import it.sevenbits.formatter.lexer.exceptions.LexerException;
 import it.sevenbits.formatter.lexer.statemachine.LexerStateTransition;
 import it.sevenbits.formatter.lexer.statemachine.State;
 import it.sevenbits.formatter.lexer.statemachine.commands.CommandContext;
@@ -48,7 +49,7 @@ public class Lexer implements ILexer {
     }
 
     @Override
-    public IToken readToken() throws ReaderException {
+    public IToken readToken() throws LexerException {
         State state = lexerStateTransition.getDefaultState();
         char character;
         if (commandContext.getReservedSymbol() != 0) {
@@ -59,7 +60,11 @@ public class Lexer implements ILexer {
         }
 
         while (hasMoreTokens() && !commandContext.isPoison()) {
-            character = reader.read();
+            try {
+                character = reader.read();
+            } catch (ReaderException e) {
+                throw new LexerException("Cannot read any more characters", e);
+            }
             commandContext.setCurrentSymbol(character);
             state = transitState(character, state);
         }
@@ -85,7 +90,11 @@ public class Lexer implements ILexer {
     }
 
     @Override
-    public boolean hasMoreTokens() throws ReaderException {
-        return reader.hasNext() || commandContext.getReservedSymbol() != 0;
+    public boolean hasMoreTokens() throws LexerException {
+        try {
+            return reader.hasNext() || commandContext.getReservedSymbol() != 0;
+        } catch (ReaderException e) {
+            throw new LexerException("Cannot call reader", e);
+        }
     }
 }

@@ -8,7 +8,6 @@ import it.sevenbits.formatter.io.readers.IReader;
  */
 public interface ILexerFactory {
     /**
-     *
      * @param reader input data for Lexer
      * @return ILexer's object
      */

@@ -1,12 +1,13 @@
 package it.sevenbits.formatter.formatters;
 
+import it.sevenbits.formatter.formatters.exceptions.FormatterException;
 import it.sevenbits.formatter.formatters.statemachine.FormatterStateTransition;
 import it.sevenbits.formatter.formatters.statemachine.State;
 import it.sevenbits.formatter.io.readers.IReader;
-import it.sevenbits.formatter.io.readers.exceptions.ReaderException;
 import it.sevenbits.formatter.io.writers.IWriter;
 import it.sevenbits.formatter.io.writers.exceptions.WriterException;
 import it.sevenbits.formatter.lexer.ILexer;
+import it.sevenbits.formatter.lexer.exceptions.LexerException;
 import it.sevenbits.formatter.lexer.factories.ILexerFactory;
 import it.sevenbits.formatter.formatters.statemachine.commands.CommandContext;
 import it.sevenbits.formatter.formatters.statemachine.commands.CommandManager;
@@ -44,8 +45,10 @@ public class StateMachineFormatter implements IFormatter {
                 commandManager.getCommand(state, token.getName()).execute();
                 state = stateTransition.getNextState(state, token.getName());
             }
-        } catch (ReaderException | WriterException e) {
-            throw new FormatterException(e);
+        } catch (LexerException e) {
+            throw new FormatterException("Cannot read any more tokens", e);
+        } catch (WriterException e) {
+            throw new FormatterException("Cannot execute the command", e);
         }
     }
 }
