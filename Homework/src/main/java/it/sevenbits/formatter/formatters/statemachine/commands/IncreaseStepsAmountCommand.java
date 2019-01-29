@@ -2,6 +2,9 @@ package it.sevenbits.formatter.formatters.statemachine.commands;
 
 import it.sevenbits.formatter.io.writers.exceptions.WriterException;
 
+/**
+ * Increases steps amount of commandContext
+ */
 public class IncreaseStepsAmountCommand implements ICommand {
     private CommandContext commandContext;
     private ICommand next;
@@ -28,7 +31,7 @@ public class IncreaseStepsAmountCommand implements ICommand {
 
     @Override
     public void execute() throws WriterException {
-        commandContext.setStepsCount(commandContext.getStepsCount() + 1 );
+        commandContext.setStepsCount(commandContext.getStepsCount() + 1);
 
         next();
     }

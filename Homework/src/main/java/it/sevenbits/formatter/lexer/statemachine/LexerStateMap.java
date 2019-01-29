@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * LexerStateMap transits one Lexer state to other
+ * LexerStateMap transits one StateMachineLexer state to other
  */
 public class LexerStateMap {
     private Map<Pair<State, String>, State> stateMap;
@@ -23,7 +23,7 @@ public class LexerStateMap {
     private final String STRING_LITERAL = "STRING_LITERAL";
 
     /**
-     * Creates Lexer state map
+     * Creates StateMachineLexer state map
      */
     public LexerStateMap() {
         State idCollectionState = new State("ID_COLLECTION");

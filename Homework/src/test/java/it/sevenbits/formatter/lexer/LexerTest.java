@@ -1,57 +1,44 @@
 package it.sevenbits.formatter.lexer;
 
+import it.sevenbits.formatter.io.readers.IReader;
 import it.sevenbits.formatter.io.readers.StringReader;
 import it.sevenbits.formatter.io.readers.exceptions.ReaderException;
-import it.sevenbits.formatter.io.readers.FileReader;
+import it.sevenbits.formatter.lexer.exceptions.LexerException;
 import it.sevenbits.formatter.lexer.token.IToken;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 public class LexerTest {
-
     @Test
-    public void readTokenTestBranchesOddAmountMocked() {
-        try {
-            FileReader reader = Mockito.mock(FileReader.class);
-            Mockito.when(reader.read()).thenReturn('{', '{', ' ', '}', '}');
-            Mockito.when(reader.hasNext()).thenReturn(true, true, true, true, true, false);
+    public void nonEmptyBufferTest() throws LexerException {
+        IReader reader = new StringReader("africa;");
+        ILexer lexer = new Lexer(reader);
 
-            Lexer lexer = new Lexer(reader);
-            IToken token;
-            String[] lexemes = {"{", "{", "}", "}"};
-            String[] names = {"CURLY_BRACKET_OPEN", "CURLY_BRACKET_OPEN",
-                    "CURLY_BRACKET_CLOSED", "CURLY_BRACKET_CLOSED"};
+        IToken token1 = lexer.readToken();
+        assertEquals("string", token1.getName());
+        assertEquals("africa", token1.getLexeme());
 
-            int i = 0;
-            while (lexer.hasMoreTokens()){
-                token = lexer.readToken();
-                assertEquals(lexemes[i], token.getLexeme());
-                assertEquals(names[i], token.getName());
-                i++;
-            }
-        } catch (ReaderException e) {
-            e.printStackTrace();
-        }
+        IToken token2 = lexer.readToken();
+        assertEquals("semicolon", token2.getName());
+        assertEquals(";", token2.getLexeme());
     }
 
-    @Test
-    public void readTokenSimpleTestMocked() {
-        try {
-            StringReader reader = new StringReader("    \n  aaa      {  bbbb;  ccc  \n   ;   }  \n  \n  ");
-            String[] lexemes = {"aaa", "{", "bbbb", ";", "ccc", ";", "}"};
-            String[] names = {"ID", "CURLY_BRACKET_OPEN", "ID", "SEMICOLON",
-                    "ID", "SEMICOLON", "CURLY_BRACKET_CLOSED"};
-            Lexer lexer = new Lexer(reader);
-            IToken token;
-            for (int i = 0; i < lexemes.length; i++) {
-                token = lexer.readToken();
-                assertEquals(lexemes[i], token.getLexeme());
-                assertEquals(names[i], token.getName());
-            }
-        } catch (ReaderException e) {
-            e.printStackTrace();
-        }
+    @Test(expected = LexerException.class)
+    public void readTokenExceptionTest() throws ReaderException, LexerException {
+        IReader readerMocked = mock(IReader.class);
+        when(readerMocked.hasNext()).thenThrow(ReaderException.class);
+        Lexer lexer = new Lexer(readerMocked);
+        lexer.readToken();
     }
+
+    @Test(expected = LexerException.class)
+    public void hasMoreTokensExceptionTest() throws ReaderException, LexerException {
+        IReader readerMocked = mock(IReader.class);
+        when(readerMocked.hasNext()).thenThrow(ReaderException.class);
+        Lexer lexer = new Lexer(readerMocked);
+        lexer.hasMoreTokens();
+    }
+
 }

@@ -14,5 +14,10 @@ public interface ILexer {
      */
     IToken readToken() throws LexerException;
 
+    /**
+     *
+     * @return whether here are more tokens or not
+     * @throws LexerException is a Lexer's exception
+     */
     boolean hasMoreTokens() throws LexerException;
 }

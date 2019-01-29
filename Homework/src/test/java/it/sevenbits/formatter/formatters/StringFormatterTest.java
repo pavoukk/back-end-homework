@@ -4,7 +4,7 @@ import it.sevenbits.formatter.formatters.exceptions.FormatterException;
 import it.sevenbits.formatter.io.readers.IReader;
 import it.sevenbits.formatter.io.readers.StringReader;
 import it.sevenbits.formatter.io.writers.StringWriter;
-import it.sevenbits.formatter.lexer.factories.LexerFactory;
+import it.sevenbits.formatter.lexer.factories.StateMachineLexerFactory;
 import org.junit.*;
 
 import static org.junit.Assert.assertEquals;
@@ -14,7 +14,7 @@ public class StringFormatterTest {
     @Test
     public void formatTestSimple() {
         IReader reader1 = new StringReader("aaa { bbbb; ccc;}");
-        IFormatter formatter = new StateMachineFormatter(new LexerFactory());
+        IFormatter formatter = new StringFormatter();
         StringWriter writer = new StringWriter();
         try {
             formatter.format(reader1, writer);
@@ -30,20 +30,20 @@ public class StringFormatterTest {
     @Test
     public void formatTestNotSimple() {
         IReader reader2 = new StringReader("public void func(){int a = 0;int b = (5+1);if((a + b)>=4){int a = 4;int b = 6;return a + b;}return 0;}");
-        IFormatter formatter = new StateMachineFormatter(new LexerFactory());
+        IFormatter formatter = new StringFormatter();
         StringWriter writer = new StringWriter();
         try {
             formatter.format(reader2, writer);
-            assertEquals(writer.getString(), "public void func() {\n" +
+            assertEquals("public void func() {\n" +
                     "    int a = 0;\n" +
-                    "    int b =(5+1);\n" +
-                    "    if((a + b) >=4) {\n" +
+                    "    int b = (5+1);\n" +
+                    "    if((a + b)>=4) {\n" +
                     "        int a = 4;\n" +
                     "        int b = 6;\n" +
                     "        return a + b;\n" +
                     "    }\n" +
                     "    return 0;\n" +
-                    "}");
+                    "}", writer.getString());
         } catch (FormatterException e) {
             e.printStackTrace();
         }

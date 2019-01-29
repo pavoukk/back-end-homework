@@ -2,6 +2,9 @@ package it.sevenbits.formatter.formatters.statemachine.commands;
 
 import it.sevenbits.formatter.io.writers.exceptions.WriterException;
 
+/**
+ * Decreases steps amount of commandContext
+ */
 public class DecreaseStepsAmountCommand implements ICommand {
     private CommandContext commandContext;
     private ICommand next;

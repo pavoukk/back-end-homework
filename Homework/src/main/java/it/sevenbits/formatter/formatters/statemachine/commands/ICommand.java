@@ -9,6 +9,8 @@ public interface ICommand {
 
     /**
      * Executes a command
+     *
+     * @throws WriterException is a Writer's exception
      */
     void execute() throws WriterException;
 }

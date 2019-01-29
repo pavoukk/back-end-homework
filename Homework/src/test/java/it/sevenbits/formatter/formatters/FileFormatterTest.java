@@ -1,5 +1,6 @@
 package it.sevenbits.formatter.formatters;
 
+import it.sevenbits.formatter.formatters.exceptions.FormatterException;
 import it.sevenbits.formatter.io.readers.exceptions.ReaderException;
 import it.sevenbits.formatter.io.writers.exceptions.WriterException;
 import it.sevenbits.formatter.lexer.factories.LexerFactory;
@@ -12,30 +13,22 @@ import java.io.*;
 
 import static org.junit.Assert.assertEquals;
 
-/*public class FileFormatterTest {
+public class FileFormatterTest {
     private File fileToRead;
     private File fileToWrite;
     private LexerFactory lexerFactory;
-    private FileFormatter fileFormatter;
+    private IFormatter fileFormatter;
 
     @Before
     public void initialize() {
-        File dir = new File("testfiles");
-        dir.mkdir();
-        fileToRead = new File(dir, "toread.txt");
-        fileToWrite = new File(dir, "towrite.txt");
-        try {
-            fileToRead.createNewFile();
-            fileToWrite.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        fileToRead = new File("../toread.txt");
+        fileToWrite = new File("../towrite.txt");
         lexerFactory = new LexerFactory();
         fileFormatter = new FileFormatter(lexerFactory);
     }
 
     @Test
-    public void formatSimpleStringTest() {
+    public void formatSimpleStringTest() throws FormatterException {
         String testString = "aaa { bbbb; ccc;}";
         String testStringResult =
                 "aaa {\n" +
@@ -47,18 +40,22 @@ import static org.junit.Assert.assertEquals;
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         try (FileReader fileReader = new FileReader(fileToRead);
              FileWriter fileWriter = new FileWriter(fileToWrite)) {
+
             fileFormatter.format(fileReader, fileWriter);
         } catch (ReaderException | WriterException e) {
             e.printStackTrace();
         }
+
         try (BufferedReader reader = new BufferedReader(new java.io.FileReader(fileToWrite))) {
             StringBuilder formattedFileContent = new StringBuilder();
             while (reader.ready()) {
                 formattedFileContent.append((char) reader.read());
             }
-            assertEquals(formattedFileContent.toString(), testStringResult);
+
+            assertEquals(testStringResult, formattedFileContent.toString());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -68,7 +65,7 @@ import static org.junit.Assert.assertEquals;
     }
 
     @Test
-    public void formatBracketsOddAmountTest() {
+    public void formatBracketsOddAmountTest() throws FormatterException {
         String testString = "{{{{{}}}}}";
         String testStringResult =
                 " {\n" +
@@ -86,18 +83,22 @@ import static org.junit.Assert.assertEquals;
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         try (FileReader fileReader = new FileReader(fileToRead);
              FileWriter fileWriter = new FileWriter(fileToWrite)) {
+
             fileFormatter.format(fileReader, fileWriter);
         } catch (ReaderException | WriterException e) {
             e.printStackTrace();
         }
+
         try (BufferedReader reader = new BufferedReader(new java.io.FileReader(fileToWrite))) {
             StringBuilder formattedFileContent = new StringBuilder();
             while (reader.ready()) {
                 formattedFileContent.append((char) reader.read());
             }
-            assertEquals(formattedFileContent.toString(), testStringResult);
+
+            assertEquals(testStringResult, formattedFileContent.toString());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -106,7 +107,7 @@ import static org.junit.Assert.assertEquals;
     }
 
     @Test
-    public void formatBracketsEvenAmountTest() {
+    public void formatBracketsEvenAmountTest() throws FormatterException {
         String testString = "{{{{}}}}";
         String testStringResult =
                 " {\n" +
@@ -117,31 +118,37 @@ import static org.junit.Assert.assertEquals;
                         "        }\n" +
                         "    }\n" +
                         "}";
+
         try (BufferedWriter bw = new BufferedWriter(new java.io.FileWriter(fileToRead))) {
             bw.write(testString);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         try (FileReader fileReader = new FileReader(fileToRead);
              FileWriter fileWriter = new FileWriter(fileToWrite)) {
+
             fileFormatter.format(fileReader, fileWriter);
         } catch (ReaderException | WriterException e) {
             e.printStackTrace();
         }
+
         try (BufferedReader reader = new BufferedReader(new java.io.FileReader(fileToWrite))) {
             StringBuilder formattedFileContent = new StringBuilder();
             while (reader.ready()) {
                 formattedFileContent.append((char) reader.read());
             }
-            assertEquals(formattedFileContent.toString(), testStringResult);
+
+            assertEquals(testStringResult, formattedFileContent.toString());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
     @Test
-    public void formatBracketsEvenAmountWithNewLinesTest() {
+    public void formatBracketsEvenAmountWithNewLinesTest() throws FormatterException {
         String testString =
                 " {\n" +
                         "     {\n" +
@@ -160,31 +167,37 @@ import static org.junit.Assert.assertEquals;
                         "        }\n" +
                         "    }\n" +
                         "}";
+
         try (BufferedWriter bw = new BufferedWriter(new java.io.FileWriter(fileToRead))) {
             bw.write(testString);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         try (FileReader fileReader = new FileReader(fileToRead);
              FileWriter fileWriter = new FileWriter(fileToWrite)) {
+
             fileFormatter.format(fileReader, fileWriter);
         } catch (ReaderException | WriterException e) {
             e.printStackTrace();
         }
+
         try (BufferedReader reader = new BufferedReader(new java.io.FileReader(fileToWrite))) {
             StringBuilder formattedFileContent = new StringBuilder();
             while (reader.ready()) {
                 formattedFileContent.append((char) reader.read());
             }
-            assertEquals(formattedFileContent.toString(), testStringResult);
+
+            assertEquals(testStringResult, formattedFileContent.toString());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
     @Test
-    public void formatSimpleFunctionTest() {
+    public void formatSimpleFunctionTest() throws FormatterException {
         String testString = "func(){ new int[12]; for(){  if(i % 2 == 0){ arr[i] = 0;}}";
         String testStringResult =
                 "func() {\n" +
@@ -199,17 +212,21 @@ import static org.junit.Assert.assertEquals;
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         try (FileReader fileReader = new FileReader(fileToRead);
              FileWriter fileWriter = new FileWriter(fileToWrite)) {
+
             fileFormatter.format(fileReader, fileWriter);
         } catch (ReaderException | WriterException e) {
             e.printStackTrace();
         }
+
         try (BufferedReader reader = new BufferedReader(new java.io.FileReader(fileToWrite))) {
             StringBuilder formattedFileContent = new StringBuilder();
             while (reader.ready()) {
                 formattedFileContent.append((char) reader.read());
             }
+
             assertEquals(formattedFileContent.toString(), testStringResult);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -217,6 +234,7 @@ import static org.junit.Assert.assertEquals;
             e.printStackTrace();
         }
     }
+
     @Test
     public void formatValideCodeTest() {
         String testString = "public void func(){int a = 0;int b = 5;if((a + b)>=4){int a = 4;int b = 6;return a + b;}return 0;}";
@@ -231,27 +249,30 @@ import static org.junit.Assert.assertEquals;
                         "    }\n" +
                         "    return 0;\n" +
                         "}";
+
         try (BufferedWriter bw = new BufferedWriter(new java.io.FileWriter(fileToRead))) {
             bw.write(testString);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         try (FileReader fileReader = new FileReader(fileToRead);
              FileWriter fileWriter = new FileWriter(fileToWrite)) {
+
             fileFormatter.format(fileReader, fileWriter);
-        } catch (ReaderException | WriterException e) {
+        } catch (ReaderException | WriterException | FormatterException e) {
             e.printStackTrace();
         }
+
         try (BufferedReader reader = new BufferedReader(new java.io.FileReader(fileToWrite))) {
             StringBuilder formattedFileContent = new StringBuilder();
             while (reader.ready()) {
                 formattedFileContent.append((char) reader.read());
             }
-            assertEquals(formattedFileContent.toString(), testStringResult);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+
+            assertEquals(testStringResult, formattedFileContent.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-}*/
+}

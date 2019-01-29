@@ -11,13 +11,6 @@ public class CommandContext {
     private char reservedSymbol;
 
     /**
-     * A constructor with no parameters
-     */
-    public CommandContext() {
-
-    }
-
-    /**
      * A constructor with one parameter
      *
      * @param lexemeBuffer is a lexeme buffer

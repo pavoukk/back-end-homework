@@ -30,7 +30,7 @@ public class FileFormatter implements IFormatter {
     /**
      * The constructor takes ILexerFactory object.
      *
-     * @param factory is used to create Lexer object
+     * @param factory is used to create StateMachineLexer object
      */
     public FileFormatter(final ILexerFactory factory) {
         this.factory = factory;

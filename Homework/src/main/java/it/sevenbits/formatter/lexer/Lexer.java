@@ -1,13 +1,9 @@
 package it.sevenbits.formatter.lexer;
 
+import it.sevenbits.formatter.io.readers.IReader;
 import it.sevenbits.formatter.io.readers.exceptions.ReaderException;
 import it.sevenbits.formatter.lexer.exceptions.LexerException;
-import it.sevenbits.formatter.lexer.statemachine.LexerStateTransition;
-import it.sevenbits.formatter.lexer.statemachine.State;
-import it.sevenbits.formatter.lexer.statemachine.commands.CommandContext;
-import it.sevenbits.formatter.lexer.statemachine.commands.CommandManager;
 import it.sevenbits.formatter.lexer.token.IToken;
-import it.sevenbits.formatter.io.readers.IReader;
 import it.sevenbits.formatter.lexer.token.Token;
 
 import java.util.HashMap;
@@ -18,83 +14,75 @@ import java.util.Map;
  * It gets IReader object while creating and translates object's info into tokens.
  */
 public class Lexer implements ILexer {
+    private final char SPACE = ' ';
+    private final char NEW_LINE = '\n';
+    private final String STRING_NAME = "string";
+
     private IReader reader;
-    private Map<Character, String> symbolTypesMap;
-    private CommandContext commandContext;
-    private CommandManager commandManager;
-    private LexerStateTransition lexerStateTransition;
+    private Map<Character, String> names;
+    private char markBuf;
 
     /**
-     * Constructor with one parameter
+     * A constructor with one parameter
      *
-     * @param reader is a characters stream
+     * @param reader is one of IReader's implementations object
      */
     public Lexer(final IReader reader) {
         this.reader = reader;
-        commandContext = new CommandContext(new StringBuilder());
-        commandManager = new CommandManager(commandContext);
-        lexerStateTransition = new LexerStateTransition();
-
-        symbolTypesMap = new HashMap<>();
-        symbolTypesMap.put('{', "CURLY_BRACKET_OPEN");
-        symbolTypesMap.put('}', "CURLY_BRACKET_CLOSED");
-        symbolTypesMap.put(';', "SEMICOLON");
-        symbolTypesMap.put('(', "ROUND_BRACKET_OPEN");
-        symbolTypesMap.put(')', "ROUND_BRACKET_CLOSED");
-        symbolTypesMap.put('\n', "NEW_LINE");
-        symbolTypesMap.put(' ', "SPACE");
-        symbolTypesMap.put('/', "SLASH");
-        symbolTypesMap.put('*', "ASTERISK");
-        symbolTypesMap.put('\"', "STRING_LITERAL");
+        names = new HashMap<>();
+//        names.put('\n', "new line");
+        names.put('{', "opening bracket");
+        names.put('}', "closing bracket");
+        names.put(';', "semicolon");
+        names.put('(', "opening parenthesis");
+        names.put(')', "closing parenthesis");
+        markBuf = ' ';
     }
 
     @Override
     public IToken readToken() throws LexerException {
-        State state = lexerStateTransition.getDefaultState();
-        char character;
-        if (commandContext.getReservedSymbol() != 0) {
-            character = commandContext.getReservedSymbol();
-            commandContext.setReservedSymbol('\0');
-            commandContext.setCurrentSymbol(character);
-            state = transitState(character, state);
+        char buffer = SPACE;
+        StringBuilder lexeme = new StringBuilder();
+        boolean append = false;
+        if (markBuf != SPACE && markBuf != NEW_LINE) {
+            lexeme.append(markBuf);
+            String str = names.get(markBuf);
+            markBuf = SPACE;
+            return new Token(str, lexeme.toString());
         }
+        try {
+            while (reader.hasNext()) {
+                buffer = reader.read();
+                String name = names.get(buffer);
+                if (name != null && lexeme.length() == 0) {
+                    lexeme.append(buffer);
+                    return new Token(name, lexeme.toString());
+                }
+                if ((buffer == SPACE || buffer == NEW_LINE || name != null) && lexeme.length() > 0) {
+                    markBuf = buffer;
+                    return new Token(STRING_NAME, lexeme.toString());
+                }
 
-        while (hasMoreTokens() && !commandContext.isPoison()) {
-            try {
-                character = reader.read();
-            } catch (ReaderException e) {
-                throw new LexerException("Cannot read any more characters", e);
+                if (!(buffer == SPACE || buffer == NEW_LINE)) {
+                    lexeme.append(buffer);
+                }
             }
-            commandContext.setCurrentSymbol(character);
-            state = transitState(character, state);
+        } catch (ReaderException e) {
+            throw new LexerException("Cannot read any more characters", e);
         }
-
-        IToken token = new Token(commandContext.getLexemeType(), commandContext.getLexemeBuffer().toString());
-        commandContext.getLexemeBuffer().setLength(0);
-        commandContext.setLexemeType(null);
-        commandContext.setPoison(false);
-        return token;
-    }
-
-    /**
-     * Transits current state to the next state
-     *
-     * @param character is the current character
-     * @param state     is the current state
-     * @return the next state
-     */
-    private State transitState(final char character, final State state) {
-        String type = symbolTypesMap.getOrDefault(character, "ID");
-        commandManager.getCommand(state, type).execute();
-        return lexerStateTransition.getNextState(state, type);
+        String name = names.get(buffer);
+        if (name != null) {
+            return new Token(name, lexeme.toString());
+        }
+        return new Token(STRING_NAME, lexeme.toString());
     }
 
     @Override
     public boolean hasMoreTokens() throws LexerException {
         try {
-            return reader.hasNext() || commandContext.getReservedSymbol() != 0;
+            return reader.hasNext();
         } catch (ReaderException e) {
-            throw new LexerException("Cannot call reader", e);
+            throw new LexerException("Cannot read any more characters", e);
         }
     }
 }

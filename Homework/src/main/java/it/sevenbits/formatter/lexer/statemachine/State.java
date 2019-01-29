@@ -3,7 +3,7 @@ package it.sevenbits.formatter.lexer.statemachine;
 import java.util.Objects;
 
 /**
- * State of Lexer automate
+ * State of StateMachineLexer automate
  */
 public class State {
     private String state;
